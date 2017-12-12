@@ -52,7 +52,7 @@ var inline_src = (<><![CDATA[
 		get value() {
 			if (this._weights !== 0)
 				return this._rawValues / this._weights
-			return 1	//in JS "x / 0 == Infinity" for x ∈ R, so prevent this
+			return 0	//in JS "x / 0 == Infinity" for x ∈ R, so prevent this
 		}
 		get rawValue() {return this._rawValues}
 		get weights() {return this._weights}
@@ -226,17 +226,17 @@ var inline_src = (<><![CDATA[
 
 			let marks_I = $.merge($.merge([], this._marks_I), this._marks_extra_I)
 			let marks_II = $.merge($.merge([], this._marks_II), this._marks_extra_II)
+			let display_I = false, display_II = false
 
 			$.each( marks_I,  (i,m)=>{ if (m.countable) avg_I.add(  m.value, m.weight ) })
 			$.each( marks_II, (i,m)=>{ if (m.countable) avg_II.add( m.value, m.weight ) })
 
 
-			if (marks_I.length !== 0)
+			if (avg_I.value !== 0)
 				$(this._average_cell_I).text( avg_I.value.toFixed(2) )
-			if (marks_II.length !== 0)
+			if (avg_II.value !== 0){
 				$(this._average_cell_II).text( avg_II.value.toFixed(2) )
-
-			if (marks_II.length !== 0){
+				
 				avg_I.appendAverage(avg_II)
 				$(this._average_cell_III).text( avg_I.value.toFixed(2) )
 			}
