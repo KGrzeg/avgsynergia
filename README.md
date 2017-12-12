@@ -1,6 +1,8 @@
 # AvgSynergia
 Automatyczne liczenie średniej ocen na portalu [synergia.librus.pl](https://synergia.librus.pl) z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność.
 
+Aplikacja została wyprodukowana z myślą o przeglądarce [Google Chrome](https://www.google.pl/chrome/browser/desktop/index.html) i z nią działa bezbłędnie. Wsparcie dla innych przeglądarek może zostanie wprowadzone  w przyszłości.
+
 
 # instalacja
 ## TamperMonkey
@@ -9,15 +11,19 @@ Automatyczne liczenie średniej ocen na portalu [synergia.librus.pl](https://syn
    
 
  1. zainstalować wspominany dodatek ([Tampermonkey](https://tampermonkey.net/))
- 2. otworzyć panel sterowania dodatkiem **obrazek**
- 3. skopiować treść skryptu AvgSynergia jako nowy skrypt **obrazek**
- 4. upewnić się, że skrypt jest włączony **obrazek**
+ 2. otworzyć [ten link](https://github.com/GrzegorzKu/avgsynergia/raw/master/dist/tamper.user.js); za jego pomocą można zainstalować lub ręcznie zaktualizować dodatek
+ 
 Od tej chwili, dodatek będzie się zawsze automatycznie załączał, gdy odwiedzisz stronę ocen w portalu Librus
 
-##Bookmarklet
-Drugi sposób na "zainstalowanie" aplikacji, to przeciągnięcie [tego linku](javascript:var%20s=document.createElement(%22script%22);document.body.appendChild(s),s.src=%22https://rawgit.com/GrzegorzKu/avgsynergia/master/dist/bookmarklet.js%22) na pasek zakładek przeglądarki. Naciskając przycisk zakładki w trakcie przeglądania ocen, załączamy skrypt. W ten sposób nie trzeba instalować niczego w przeglądarce, jednak, program nie będzie się uruchamiał automatycznie. Trzeba nacisnąć przycisk za każdym razem.
+## Bookmarklet
+Drugi sposób na "zainstalowanie" aplikacji, to utworzenie zakładki w przeglądarce.
+Nazwa zakładki jest dowolna, natomiast jej adres URL musi mieć następującą treść:
+```
+javascript:(function(){var%20s=document.createElement(%22script%22);document.body.appendChild(s),s.src=%22https://rawgit.com/GrzegorzKu/avgsynergia/master/dist/bookmarklet.js%22})()
+```
+Naciskając przycisk zakładki w trakcie przeglądania ocen na stronie librus, uruchamiamy skrypt. W ten sposób nie trzeba instalować niczego w przeglądarce, jednak, program nie będzie się załączał automatycznie. Trzeba nacisnąć przycisk za każdym razem. To rozwiązanie powoduje pobranie kodu jednorazowo w chwili naciśnięcia przycisku (zakładki) oraz natychmiastowe jego usunięcie w momencie odświeżenia strony.
 
-#Licencja
+# Licencja
 Licencja MIT
 Copyright (c) 2017 Grzegorz Kupczyk kupczykgrzeg@gmail.com
 
