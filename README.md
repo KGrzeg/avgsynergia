@@ -15,7 +15,7 @@ Automatyczne liczenie średniej ocen na portalu [synergia.librus.pl](https://syn
 Od tej chwili, dodatek będzie się zawsze automatycznie załączał, gdy odwiedzisz stronę ocen w portalu Librus
 
 ##Bookmarklet
-Drugi sposób na "zainstalowanie" aplikacji, to przeciągnięcie [tego linku](javascript:void()) na pasek zakładek przeglądarki. Naciskając przycisk zakładki w trakcie przeglądania ocen, załączamy skrypt. W ten sposób nie trzeba instalować niczego w przeglądarce, jednak, program nie będzie się uruchamiał automatycznie. Trzeba nacisnąć przycisk za każdym razem.
+Drugi sposób na "zainstalowanie" aplikacji, to przeciągnięcie [tego linku](javascript:var%20s=document.createElement(%22script%22);document.body.appendChild(s),s.src=%22https://rawgit.com/GrzegorzKu/avgsynergia/master/dist/bookmarklet.js%22) na pasek zakładek przeglądarki. Naciskając przycisk zakładki w trakcie przeglądania ocen, załączamy skrypt. W ten sposób nie trzeba instalować niczego w przeglądarce, jednak, program nie będzie się uruchamiał automatycznie. Trzeba nacisnąć przycisk za każdym razem.
 
 #Licencja
 Licencja MIT
