@@ -1,14 +1,24 @@
 // ==UserScript==
 // @name         			Librus Srednia
 // @namespace    			http://kgrzeg.pl/
-// @version      			0.1
+// @homepage			    http://kgrzeg.pl/
+// @homepageURL		    http://kgrzeg.pl/
 // @description  			Automatyczne liczenie średniej ocen na portalu synergia.librus.pl z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność
 // @author       			Grzegorz Kupczyk
+
+// @version      			0.1
+// @downloadURL https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
+// @updateURL   https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
+// @supportURL  https://github.com/GrzegorzKu/avgsynergia/issues
+
 // @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
+
 // @resource floating	https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
 // @resource css			https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css
+
 // @match    					https://synergia.librus.pl/przegladaj_oceny/uczen
+
 // @grant		 					GM_getResourceText
 // @grant		 					GM_addStyle
 // ==/UserScript==
