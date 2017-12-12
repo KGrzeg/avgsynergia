@@ -7,8 +7,8 @@
 // @author       			Grzegorz Kupczyk
 
 // @version      			0.1
-// @downloadURL https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
-// @updateURL   https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
+// @downloadURL https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
+// @updateURL   https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
 // @supportURL  https://github.com/GrzegorzKu/avgsynergia/issues
 
 // @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
