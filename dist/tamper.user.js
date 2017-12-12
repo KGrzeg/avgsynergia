@@ -13,6 +13,8 @@
 
 // @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
+// @icon64      			https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
+// @icon64URL    			https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
 
 // @resource floating	https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
 // @resource css			https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css
