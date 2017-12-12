@@ -221,7 +221,7 @@ class Subject {
 			$(this._average_cell_I).text(avg_I.value.toFixed(2))
 		if (avg_II.value !== 0){
 			$(this._average_cell_II).text(avg_II.value.toFixed(2))
-			
+
 			avg_I.appendAverage(avg_II)
 			$(this._average_cell_III).text(avg_I.value.toFixed(2))
 		}
@@ -352,8 +352,8 @@ class Controller {
 				//hide
 				let height =
 					$("#AverageFloating").height() -
-					($("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")))
-				console.log(height)
+					($("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")) - 5)
+				
 				$("#AverageFloating")
 					.animate({
 						bottom: -height
