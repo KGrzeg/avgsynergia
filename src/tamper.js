@@ -1,12 +1,26 @@
 // ==UserScript==
-// @name         Librus Srednia
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Automatyczne liczenie średniej ocen na portalu synergia.librus.pl z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność
-// @author       Grzegorz Kupczyk
-// @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
-// @match        https://synergia.librus.pl/przegladaj_oceny/uczen
+// @name         			Librus Srednia
+// @namespace    			http://kgrzeg.pl/
+// @homepage			    http://kgrzeg.pl/
+// @homepageURL		    http://kgrzeg.pl/
+// @description  			Automatyczne liczenie średniej ocen na portalu synergia.librus.pl z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność
+// @author       			Grzegorz Kupczyk
+
+// @version      			0.1
+// @downloadURL https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
+// @updateURL   https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.js
+// @supportURL  https://github.com/GrzegorzKu/avgsynergia/issues
+
+// @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
+// @require      			https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
+
+// @resource floating	https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
+// @resource css			https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css
+
+// @match    					https://synergia.librus.pl/przegladaj_oceny/uczen
+
+// @grant		 					GM_getResourceText
+// @grant		 					GM_addStyle
 // ==/UserScript==
 
 /* jshint ignore:start */
@@ -15,7 +29,6 @@ var inline_src = (<><![CDATA[
 	/* jshint esnext: false */
 	/* jshint esversion: 6 */
 	/* jshint asi: true */
-
 
 	class WeightedAverage{
 		constructor(){
@@ -340,8 +353,8 @@ var inline_src = (<><![CDATA[
 					//hide
 					let height =
 						$("#AverageFloating").height() -
-						( $("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")) )
-					console.log(height)
+						( $("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")) + 5 )
+
 					$("#AverageFloating")
 						.animate({bottom: -height})
 					this._pane_hidded = !this._pane_hidded
@@ -351,15 +364,13 @@ var inline_src = (<><![CDATA[
 	}
 
 	$(function(){
+		var css = GM_getResourceText("css")
+		var floating = GM_getResourceText("floating")
 
-		var css = "PHN0eWxlPiNBdmVyYWdlRmxvYXRpbmd7DQogIHBvc2l0aW9uOiBmaXhlZDsNCiAgYm90dG9tOiAwOw0KICByaWdodDogMDsNCiAgei1pbmRleDogNTA7DQoJbWluLWhlaWdodDogMjAwcHgNCgltaW4td2lkdGg6IDMwMHB4Ow0KfQ0KLm1hcmtOb3JtYWxpemUgLmdyYWRlLWJveHsNCiAgYmFja2dyb3VuZC1jb2xvcjogYnVybHl3b29kICFpbXBvcnRhbnQ7DQogIGNvbG9yOiBibGFjayAhaW1wb3J0YW50Ow0KfQ0KDQppbnB1dFt0eXBlPW51bWJlcl0gew0KICAgIGZvbnQtZmFtaWx5OidIZWx2ZXRpY2EgTmV1ZScsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7DQogICAgYm9yZGVyLXJhZGl1czogNXB4Ow0KICAgIGJvcmRlcjogMXB4ICNkZmRmZTAgc29saWQ7DQogICAgYmFja2dyb3VuZDogI0ZGRkZGRjsNCiAgICBwYWRkaW5nOiAwIDVweDsNCiAgICBoZWlnaHQ6IDI1cHg7DQogICAgbGluZS1oZWlnaHQ6IDI1cHg7DQogICAgd2lkdGg6IDE3MHB4Ow0KICAgIG1hcmdpbjogMCA1cHg7DQogICAgY29sb3I6ICM3MTcxNzE7DQogICAgZm9udC1zaXplOiAxMnB4ICFpbXBvcnRhbnQ7DQogICAgb3V0bGluZTogbm9uZTsNCiAgICBib3gtc2l6aW5nOmJvcmRlci1ib3g7DQogICAgLW1vei1ib3gtc2l6aW5nOmJvcmRlci1ib3g7IC8qIEZpcmVmb3ggKi8NCiAgICAtd2Via2l0LWJveC1zaXppbmc6Ym9yZGVyLWJveDsgLyogU2FmYXJpICovDQp9PC9zdHlsZT4="
-		var floating = "PGRpdiBpZD0iQXZlcmFnZUZsb2F0aW5nIj4NCgk8dGFibGUgY2xhc3M9ImRlY29yYXRlZCBmb3JtIGNlbnRlciI+DQoJCTx0aGVhZD4NCgkJCTx0cj4NCgkJCQk8dGQgaWQ9ImF2SGlkZSIgY29sc3Bhbj0iMiIgdGl0bGU9IlVrcnlqIHBhbmVsIHdwcm93YWR6YW5pYSBvY2VuIj5Eb2RhaiBvY2VuPC90ZD4NCgkJCTwvdHI+DQoJCTwvdGhlYWQ+DQoJCTx0Ym9keT4NCgkJCTx0ciBjbGFzcz0ibGluZTEiPg0KCQkJCTx0aD5QcnplZG1pb3Q8L3RoPg0KCQkJCTx0ZD48c2VsZWN0IGlkPSJhdlN1YmplY3QiIHRhYmluZGV4PSIwIiBjbGFzcz0ibGVmdCI+PC9zZWxlY3Q+PC90ZD4NCgkJCTwvdHI+DQoJCQk8dHIgY2xhc3M9ImxpbmUwIj4NCgkJCQk8dGg+U2VtZXN0cjwvdGg+DQoJCQkJPHRkPg0KCQkJCQk8c2VsZWN0IGlkPSJhdlNlbWVzdGVyIiB0YWJpbmRleD0iMSIgY2xhc3M9InNtYWxsIGxlZnQiPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iMCIgc2VsZWN0ZWQ9IjEiPjE8L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjEiPjI8L29wdGlvbj4NCgkJCQkJPC9zZWxlY3Q+DQoJCQkJPC90ZD4NCgkJCTwvdHI+DQoJCQk8dHIgY2xhc3M9ImxpbmUxIj4NCgkJCQk8dGg+T2NlbmE8L3RoPg0KCQkJCTx0ZD4NCgkJCQkJPHNlbGVjdCBuYW1lPSIiIGlkPSJhdlJhdGluZyIgY2xhc3M9InNtYWxsIGxlZnQiIHRhYmluZGV4PSIyIj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjAiIHNlbGVjdGVkPSIwIj4wPC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSIwLjc1IiBzZWxlY3RlZD0iMCI+MS08L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjEiIHNlbGVjdGVkPSIwIj4xPC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSIxLjUiIHNlbGVjdGVkPSIwIj4xKzwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iMS43NSIgc2VsZWN0ZWQ9IjAiPjItPC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSIyIiBzZWxlY3RlZD0iMCI+Mjwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iMi41IiBzZWxlY3RlZD0iMCI+Mis8L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjIuNzUiIHNlbGVjdGVkPSIwIj4zLTwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iMyIgc2VsZWN0ZWQ9IjAiPjM8L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjMuNSIgc2VsZWN0ZWQ9IjAiPjMrPC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSIzLjc1IiBzZWxlY3RlZD0iMCI+NC08L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjQiIHNlbGVjdGVkPSIwIj40PC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSI0LjUiIHNlbGVjdGVkPSIwIj40Kzwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iNC43NSIgc2VsZWN0ZWQ9IjAiPjUtPC9vcHRpb24+DQoJCQkJCQk8b3B0aW9uIHZhbHVlPSI1IiBzZWxlY3RlZD0iMSI+NTwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iNS41IiBzZWxlY3RlZD0iMCI+NSs8L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjUuNzUiIHNlbGVjdGVkPSIwIj42LTwvb3B0aW9uPg0KCQkJCQkJPG9wdGlvbiB2YWx1ZT0iNiIgc2VsZWN0ZWQ9IjAiPjY8L29wdGlvbj4NCgkJCQkJCTxvcHRpb24gdmFsdWU9IjYuNSIgc2VsZWN0ZWQ9IjAiPjYrPC9vcHRpb24+DQoJCQkJCTwvc2VsZWN0Pg0KCQkJCTwvdGQ+DQoJCQk8L3RyPg0KCQkJPHRyIGNsYXNzPSJsaW5lMCI+DQoJCQkJPHRoPldhZ2E8L3RoPg0KCQkJCTx0ZD48aW5wdXQgaWQ9ImF2V2VpZ2h0IiB0eXBlPSJudW1iZXIiIHRhYmluZGV4PSIzIiB2YWx1ZT0iMSIgY2xhc3M9ImxlZnQiPjwvdGQ+DQoJCQk8L3RyPg0KCQk8L3Rib2R5Pg0KCQk8dGZvb3Q+DQoJCQk8dHI+DQoJCQkJPHRkIGNvbHNwYW49IjIiPg0KCQkJCQk8YnV0dG9uIGlkPSJhdlN1Ym1pdCIgdGFiaW5kZXg9IjMwIiBjbGFzcz0ic21hbGwgdWktYnV0dG9uIHVpLXdpZGdldCB1aS1zdGF0ZS1kZWZhdWx0IHVpLWNvcm5lci1hbGwiPkRvZGFqPC9idXR0b24+DQoJCQkJCTxidXR0b24gaWQ9ImF2UmVzZXQiIHRhYmluZGV4PSIzMSIgY2xhc3M9InNtYWxsIHVpLWJ1dHRvbiB1aS13aWRnZXQgdWktc3RhdGUtZGVmYXVsdCB1aS1jb3JuZXItYWxsIj5XeWN6eTwvYnV0dG9uPg0KCQkJCQk8YnV0dG9uIGlkPSJhdk5vcm1hbGl6ZSIgdGFiaW5kZXg9IjMyIiBjbGFzcz0ic21hbGwgdWktYnV0dG9uIHVpLXdpZGdldCB1aS1zdGF0ZS1kZWZhdWx0IHVpLWNvcm5lci1hbGwiPk5vcm1hbGl6dWo8L2J1dHRvbj4NCgkJCQk8L3RkPg0KCQkJPC90cj4NCgkJPC90Zm9vdD4NCgk8L3RhYmxlPg0KPC9kaXY+"
-		$(document.head).append( $.parseHTML(atob(css)) )
-		$(document.body).append( $.parseHTML(atob(floating)) )
-
+		GM_addStyle( css )
+		$(document.body).append( $.parseHTML( floating ))
 
 		var ctrl = new Controller()
-
 
 		console.log("Automatyczne liczenie średniej możliwe dzięki %cGrzesiowi Kupczyk %c;)", "color:yellowgreen", "color:inherit");
 	})
