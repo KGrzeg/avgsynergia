@@ -6,15 +6,15 @@
 // @description        Automatyczne liczenie średniej ocen na portalu synergia.librus.pl z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność
 // @author             Grzegorz Kupczyk
 
-// @version            0.1
+// @version            0.2
 // @downloadURL        https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
 // @updateURL          https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
 // @supportURL         https://github.com/GrzegorzKu/avgsynergia/issues
 
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
-// @icon64             https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
-// @icon64URL          https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
+// @icon64             https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
+// @icon64URL          https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
 
 // @resource floating  https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
 // @resource css       https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css

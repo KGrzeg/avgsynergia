@@ -6,15 +6,15 @@
 // @description        Automatyczne liczenie średniej ocen na portalu synergia.librus.pl z uwzględnieniem wag dla uczniów szkół, które wyłączyły tę funkcjonalność
 // @author             Grzegorz Kupczyk
 
-// @version            0.1
+// @version            0.2
 // @downloadURL        https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
 // @updateURL          https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/tamper.user.js
 // @supportURL         https://github.com/GrzegorzKu/avgsynergia/issues
 
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
-// @icon64             https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
-// @icon64URL          https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
+// @icon64             https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
+// @icon64URL          https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
 
 // @resource floating  https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
 // @resource css       https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css
@@ -44,7 +44,6 @@ var inline_src = (<><![CDATA[
 	appendAverage(wavg) {
 		this._rawValues += wavg.rawValue
 		this._weights += wavg.weights
-		//this.add(wavg.rawValue, wavg.weights)
 	}
 	reset() {
 		this._rawValues = 0
@@ -75,10 +74,9 @@ var inline_src = (<><![CDATA[
 				this._countable = true
 				this._countToAverage = this.parseCountToAverage(this._$aElement.attr("title"))
 				this._weight = this.parseWeight(this._$aElement.attr("title"))
-				if (this._countToAverage !== null && this._weight !== null)
-					this._countable = true
-				else
-					this._countable = false
+
+				if (this._weight === null)
+					this._weight = Mark.defualt_weight
 			} else {
 				this._countable = false
 				this._countToAverage = false
@@ -86,7 +84,7 @@ var inline_src = (<><![CDATA[
 			}
 		} else {
 			this._value = grade
-			this._weight = weight
+			this._weight = Math.min(1, weight)	//weight can't be smaller than 1
 			this._countToAverage = true
 			this._countable = true
 			this._$boxElement = this._generateBox()
@@ -213,6 +211,7 @@ var inline_src = (<><![CDATA[
 		}
 	}
 }
+Mark.defualt_weight = 1
   class Subject {
 	constructor(row) {
 		let cells = $(row).children()
@@ -232,6 +231,8 @@ var inline_src = (<><![CDATA[
 		this._average_cell_II = cells[Subject.AvgIICell]
 		this._average_cell_III = cells[Subject.AvgIIICell]
 
+		this._ignore_count_to_average_flag = false
+
 		this._readMarks()
 		this.updateAverages()
 	}
@@ -244,20 +245,25 @@ var inline_src = (<><![CDATA[
 		let marks_II = $.merge($.merge([], this._marks_II), this._marks_extra_II)
 
 		$.each(marks_I, (i, m) => {
-			if (m.countable) avg_I.add(m.value, m.weight)
+			if (m.countable && (m.countToAverage || this._ignore_count_to_average_flag)) avg_I.add(m.value, m.weight)
 		})
 		$.each(marks_II, (i, m) => {
-			if (m.countable) avg_II.add(m.value, m.weight)
+			if (m.countable && (m.countToAverage || this._ignore_count_to_average_flag)) avg_II.add(m.value, m.weight)
 		})
 
 
 		if (avg_I.value !== 0)
 			$(this._average_cell_I).text(avg_I.value.toFixed(2))
+		else
+			$(this._average_cell_I).text("")
 		if (avg_II.value !== 0) {
 			$(this._average_cell_II).text(avg_II.value.toFixed(2))
 
 			avg_I.appendAverage(avg_II)
 			$(this._average_cell_III).text(avg_I.value.toFixed(2))
+		} else {
+			$(this._average_cell_II).text("")
+			$(this._average_cell_III).text("")
 		}
 	}
 	addMark(mark, semester) {
@@ -309,6 +315,14 @@ var inline_src = (<><![CDATA[
 		return this._marks_II
 	}
 
+	set ignore_count_to_average_flag(v) {
+		let t = this._ignore_count_to_average_flag
+		this._ignore_count_to_average_flag = v
+
+		if (t !== v)
+			this.updateAverages()
+	}
+
 	/* read table's header, and calculate the offsets of cells
 		argument thead:jquery object (last row of thead)	*/
 	static calculate_cells(thead) {
@@ -316,7 +330,7 @@ var inline_src = (<><![CDATA[
 			return
 
 		thead.children().each((i, e) => {
-			i += 2	//the header have 2 rows with spaned cells; second is offset by 2
+			i += 2 //the header have 2 rows with spaned cells; second is offset by 2
 			switch ($(e).text()) {
 				case "Oceny bieżące":
 					{
@@ -387,6 +401,12 @@ Subject.TheadProcessed = false
 		$('.decorated.stretch:visible>tbody')
 			.toggleClass("markNormalize")
 	}
+	ignoreCountToAverage() {
+		let val = $("#avIgnoreCountToAverage").prop("checked")
+		this._subjects.forEach((e, i) => {
+			e.ignore_count_to_average_flag = val;
+		})
+	}
 
 	_readSubjects() {
 		let thead = $('.decorated.stretch:visible>thead>tr:last')
@@ -420,6 +440,7 @@ Subject.TheadProcessed = false
 		$("#avSubmit").click(this.addMark.bind(this))
 		$("#avReset").click(this.clearMarks.bind(this))
 		$("#avNormalize").click(this.normalize.bind(this))
+		$("#avIgnoreCountToAverage").click(this.ignoreCountToAverage.bind(this))
 	}
 	_attachDisplay() {
 		this._pane_hidded = false
@@ -435,8 +456,13 @@ Subject.TheadProcessed = false
 				//hide
 				let height =
 					$("#AverageFloating").height() -
-					($("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")) - 5)
-				
+					(
+						$("#avHide").height() +
+						parseInt($("#avHide").css("padding-top")) +
+						parseInt($("#avHide").css("padding-bottom")) +
+						parseInt($("#AverageFloating table").css("margin-top"))
+					)
+
 				$("#AverageFloating")
 					.animate({
 						bottom: -height

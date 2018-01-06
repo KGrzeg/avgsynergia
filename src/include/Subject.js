@@ -17,6 +17,8 @@ class Subject {
 		this._average_cell_II = cells[Subject.AvgIICell]
 		this._average_cell_III = cells[Subject.AvgIIICell]
 
+		this._ignore_count_to_average_flag = false
+
 		this._readMarks()
 		this.updateAverages()
 	}
@@ -29,20 +31,25 @@ class Subject {
 		let marks_II = $.merge($.merge([], this._marks_II), this._marks_extra_II)
 
 		$.each(marks_I, (i, m) => {
-			if (m.countable) avg_I.add(m.value, m.weight)
+			if (m.countable && (m.countToAverage || this._ignore_count_to_average_flag)) avg_I.add(m.value, m.weight)
 		})
 		$.each(marks_II, (i, m) => {
-			if (m.countable) avg_II.add(m.value, m.weight)
+			if (m.countable && (m.countToAverage || this._ignore_count_to_average_flag)) avg_II.add(m.value, m.weight)
 		})
 
 
 		if (avg_I.value !== 0)
 			$(this._average_cell_I).text(avg_I.value.toFixed(2))
+		else
+			$(this._average_cell_I).text("")
 		if (avg_II.value !== 0) {
 			$(this._average_cell_II).text(avg_II.value.toFixed(2))
 
 			avg_I.appendAverage(avg_II)
 			$(this._average_cell_III).text(avg_I.value.toFixed(2))
+		} else {
+			$(this._average_cell_II).text("")
+			$(this._average_cell_III).text("")
 		}
 	}
 	addMark(mark, semester) {
@@ -94,6 +101,14 @@ class Subject {
 		return this._marks_II
 	}
 
+	set ignore_count_to_average_flag(v) {
+		let t = this._ignore_count_to_average_flag
+		this._ignore_count_to_average_flag = v
+
+		if (t !== v)
+			this.updateAverages()
+	}
+
 	/* read table's header, and calculate the offsets of cells
 		argument thead:jquery object (last row of thead)	*/
 	static calculate_cells(thead) {
@@ -101,7 +116,7 @@ class Subject {
 			return
 
 		thead.children().each((i, e) => {
-			i += 2	//the header have 2 rows with spaned cells; second is offset by 2
+			i += 2 //the header have 2 rows with spaned cells; second is offset by 2
 			switch ($(e).text()) {
 				case "Oceny bieżące":
 					{

@@ -29,6 +29,12 @@ class Controller {
 		$('.decorated.stretch:visible>tbody')
 			.toggleClass("markNormalize")
 	}
+	ignoreCountToAverage() {
+		let val = $("#avIgnoreCountToAverage").prop("checked")
+		this._subjects.forEach((e, i) => {
+			e.ignore_count_to_average_flag = val;
+		})
+	}
 
 	_readSubjects() {
 		let thead = $('.decorated.stretch:visible>thead>tr:last')
@@ -62,6 +68,7 @@ class Controller {
 		$("#avSubmit").click(this.addMark.bind(this))
 		$("#avReset").click(this.clearMarks.bind(this))
 		$("#avNormalize").click(this.normalize.bind(this))
+		$("#avIgnoreCountToAverage").click(this.ignoreCountToAverage.bind(this))
 	}
 	_attachDisplay() {
 		this._pane_hidded = false
@@ -77,8 +84,13 @@ class Controller {
 				//hide
 				let height =
 					$("#AverageFloating").height() -
-					($("#avHide").height() + parseInt($("#AverageFloating table").css("margin-top")) - 5)
-				
+					(
+						$("#avHide").height() +
+						parseInt($("#avHide").css("padding-top")) +
+						parseInt($("#avHide").css("padding-bottom")) +
+						parseInt($("#AverageFloating table").css("margin-top"))
+					)
+
 				$("#AverageFloating")
 					.animate({
 						bottom: -height

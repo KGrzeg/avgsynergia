@@ -10,7 +10,6 @@ class WeightedAverage {
 	appendAverage(wavg) {
 		this._rawValues += wavg.rawValue
 		this._weights += wavg.weights
-		//this.add(wavg.rawValue, wavg.weights)
 	}
 	reset() {
 		this._rawValues = 0

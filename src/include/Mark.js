@@ -10,10 +10,9 @@ class Mark {
 				this._countable = true
 				this._countToAverage = this.parseCountToAverage(this._$aElement.attr("title"))
 				this._weight = this.parseWeight(this._$aElement.attr("title"))
-				if (this._countToAverage !== null && this._weight !== null)
-					this._countable = true
-				else
-					this._countable = false
+
+				if (this._weight === null)
+					this._weight = Mark.defualt_weight
 			} else {
 				this._countable = false
 				this._countToAverage = false
@@ -21,7 +20,7 @@ class Mark {
 			}
 		} else {
 			this._value = grade
-			this._weight = weight
+			this._weight = Math.min(1, weight)	//weight can't be smaller than 1
 			this._countToAverage = true
 			this._countable = true
 			this._$boxElement = this._generateBox()
@@ -148,3 +147,4 @@ class Mark {
 		}
 	}
 }
+Mark.defualt_weight = 1
