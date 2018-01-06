@@ -13,8 +13,8 @@
 
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require            https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
-// @icon64             https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
-// @icon64URL          https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/images/logo.png
+// @icon64             https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
+// @icon64URL          https://github.com/GrzegorzKu/avgsynergia/tree/master/images/logo.png
 
 // @resource floating  https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/floating.html
 // @resource css       https://raw.githubusercontent.com/GrzegorzKu/avgsynergia/master/dist/style.css
@@ -42,7 +42,9 @@ var inline_src = (<><![CDATA[
 		this._weights += w
 	}
 	appendAverage(wavg) {
-		this.add(wavg.rawValue, wavg.weights)
+		this._rawValues += wavg.rawValue
+		this._weights += wavg.weights
+		//this.add(wavg.rawValue, wavg.weights)
 	}
 	reset() {
 		this._rawValues = 0
@@ -223,12 +225,12 @@ var inline_src = (<><![CDATA[
 		this._marks_extra_I = []
 		this._marks_extra_II = []
 
-		this._marks_cell_I = cells[2]
-		this._marks_cell_II = cells[5]
+		this._marks_cell_I = cells[Subject.MarksICell]
+		this._marks_cell_II = cells[Subject.MarksIICell]
 
-		this._average_cell_I = cells[3]
-		this._average_cell_II = cells[6]
-		this._average_cell_III = cells[8]
+		this._average_cell_I = cells[Subject.AvgICell]
+		this._average_cell_II = cells[Subject.AvgIICell]
+		this._average_cell_III = cells[Subject.AvgIIICell]
 
 		this._readMarks()
 		this.updateAverages()
@@ -251,7 +253,7 @@ var inline_src = (<><![CDATA[
 
 		if (avg_I.value !== 0)
 			$(this._average_cell_I).text(avg_I.value.toFixed(2))
-		if (avg_II.value !== 0){
+		if (avg_II.value !== 0) {
 			$(this._average_cell_II).text(avg_II.value.toFixed(2))
 
 			avg_I.appendAverage(avg_II)
@@ -306,7 +308,54 @@ var inline_src = (<><![CDATA[
 	get marks_II() {
 		return this._marks_II
 	}
+
+	/* read table's header, and calculate the offsets of cells
+		argument thead:jquery object (last row of thead)	*/
+	static calculate_cells(thead) {
+		if (Subject.TheadProcessed)
+			return
+
+		thead.children().each((i, e) => {
+			i += 2	//the header have 2 rows with spaned cells; second is offset by 2
+			switch ($(e).text()) {
+				case "Oceny bieżące":
+					{
+						if (i <= Subject.MarksICell)
+							break
+						else
+							Subject.MarksIICell = i
+						break
+					}
+
+				case "Śr.I":
+					{
+						Subject.AvgICell = i
+						break
+					}
+
+				case "Śr.II":
+					{
+						Subject.AvgIICell = i
+						break
+					}
+
+				case "Śr.R":
+					{
+						Subject.AvgIIICell = i
+						break
+					}
+			}
+		})
+
+		Subject.TheadProcessed = true
+	}
 }
+Subject.MarksICell = 2
+Subject.MarksIICell = 5
+Subject.AvgICell = 3
+Subject.AvgIICell = 6
+Subject.AvgIIICell = 8
+Subject.TheadProcessed = false
   class Controller {
 	constructor() {
 		this._subjects = []
@@ -340,6 +389,9 @@ var inline_src = (<><![CDATA[
 	}
 
 	_readSubjects() {
+		let thead = $('.decorated.stretch:visible>thead>tr:last')
+		Subject.calculate_cells(thead)
+
 		var mark_rows = $('.decorated.stretch:visible>tbody')
 			.children()
 			.filter(function (i, e) {

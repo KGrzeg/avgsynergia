@@ -31,6 +31,9 @@ class Controller {
 	}
 
 	_readSubjects() {
+		let thead = $('.decorated.stretch:visible>thead>tr:last')
+		Subject.calculate_cells(thead)
+
 		var mark_rows = $('.decorated.stretch:visible>tbody')
 			.children()
 			.filter(function (i, e) {
